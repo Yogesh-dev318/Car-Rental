@@ -11,7 +11,7 @@ const generateToken = (res, userId) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
     sameSite: 'strict', // Prevent CSRF attacks
-    maxAge: 3600000, // 1 hour (in milliseconds)
+    maxAge: 7*24*60*60*1000, 
     path: '/', // The path for which the cookie is valid
   });
 };
