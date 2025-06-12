@@ -4,7 +4,7 @@ const prisma = require('../config/db'); // Assuming this correctly imports your 
 const cloudinary = require('../config/cloudinaryConfig');
 
 // Helper function to extract public ID from Cloudinary URL (kept for context, though not used for deletion now)
-// IMPORTANT: If you remove the 'folder' option during upload, the publicId might not contain a folder prefix
+// Note: If you remove the 'folder' option during upload, the publicId might not contain a folder prefix
 // in the URL. If you re-introduce deletion functionality later, you might need to adjust this helper
 // or how you derive the publicId from the stored URL.
 const getCloudinaryPublicId = (imageUrl) => {
@@ -62,9 +62,9 @@ const createCar = asyncHandler(async (req, res) => {
       const result = await cloudinary.uploader.upload(base64Image);
       imageUrl = result.secure_url;
     } catch (uploadError) {
-      console.error('Cloudinary upload error during car creation:', uploadError.message);
+      console.error('Cloudinary upload error during car creation:', uploadError);
       res.status(500);
-      throw new Error('Image upload failed. Please try again.');
+      throw new Error(`Image upload failed: ${uploadError.message}`);
     }
   }
 
@@ -121,8 +121,8 @@ const updateCar = asyncHandler(async (req, res) => {
     location,
     pricePerDay,
     availability,
-    imageUrl: base64Image // This specifically captures the base64 string for a new image
-  } = req.body; // Destructure all possible fields directly from req.body
+    imageUrl: base64Image // This captures the base64 string for a new image upload
+  } = req.body; // Destructure all potential fields directly from req.body
 
   // 1. Find the car to update
   const car = await prisma.car.findUnique({ where: { id: carId } });
@@ -131,42 +131,12 @@ const updateCar = asyncHandler(async (req, res) => {
     throw new Error('Car not found.');
   }
 
-  // --- START: Image Update Logic (takes precedence) ---
-  // If `base64Image` is provided, it means a new image is being uploaded.
-  if (base64Image) {
-    try {
-      // SIMPLIFIED CLOUDINARY UPLOAD CALL HERE:
-      const result = await cloudinary.uploader.upload(base64Image);
-      // Only update the imageUrl in the database
-      const updatedCar = await prisma.car.update({
-        where: { id: carId },
-        data: { imageUrl: result.secure_url },
-      });
-      res.status(200).json(updatedCar);
-      return; // IMPORTANT: Exit the function after handling image update
-    } catch (uploadError) {
-      console.error('Cloudinary image upload error during car update:', uploadError.message);
-      res.status(500);
-      throw new Error('Failed to upload new image to Cloudinary.');
-    }
-  }
-  // If `req.body` explicitly contains `imageUrl` and its value is `null` or an empty string,
-  // it means the client wants to remove the image.
-  else if (req.body.hasOwnProperty('imageUrl') && (req.body.imageUrl === null || req.body.imageUrl === '')) {
-    // Only update the imageUrl to null in the database
-    const updatedCar = await prisma.car.update({
-      where: { id: carId },
-      data: { imageUrl: null },
-    });
-    res.status(200).json(updatedCar);
-    return; // IMPORTANT: Exit the function after handling image update
-  }
-  // --- END: Image Update Logic ---
+  // 2. Initialize the data object for Prisma update
+  // This object will only contain fields that are explicitly sent in the request body,
+  // allowing for partial updates and combining image and other data.
+  const dataToUpdate = {};
 
-  // --- START: Other Car Details Update Logic (only if no image update was requested) ---
-  const dataToUpdate = {}; // Initialize data for non-image fields
-
-  // Process each potential updatable field from req.body
+  // 3. Process each potential updatable field from req.body (excluding imageUrl for now)
   // We use `req.body.hasOwnProperty()` to ensure we update even if the value is `null`, `false`, or `0`.
   // If a field is not present in req.body, it's simply skipped, and Prisma keeps the existing value.
 
@@ -212,22 +182,44 @@ const updateCar = asyncHandler(async (req, res) => {
     dataToUpdate.availability = availability;
   }
 
-  // Check if there's anything valid to update (non-image fields)
+  // 4. Handle image update logic and include in dataToUpdate
+  if (base64Image) {
+    // A new base64 image string was provided, so upload it to Cloudinary
+    try {
+      // SIMPLIFIED CLOUDINARY UPLOAD CALL HERE:
+      console.log('Attempting to upload image to Cloudinary...');
+      const result = await cloudinary.uploader.upload(base64Image);
+      dataToUpdate.imageUrl = result.secure_url; // Set new image URL for update
+      // As requested, no deletion of the old image link occurs here.
+    } catch (error) {
+      console.error('Cloudinary image upload error during car update:', error);
+      res.status(500);
+      throw new Error(`Failed to upload new image to Cloudinary: ${error.message}`);
+    }
+  }
+  // If `req.body` explicitly contains `imageUrl` and its value is `null` or an empty string,
+  // it means the client wants to remove the image.
+  else if (req.body.hasOwnProperty('imageUrl') && (req.body.imageUrl === null || req.body.imageUrl === '')) {
+    dataToUpdate.imageUrl = null; // Set image URL to null for update
+    // As requested, no deletion of the image from Cloudinary occurs here.
+  }
+  // If `imageUrl` (or `base64Image`) is not present in `req.body` at all,
+  // we do nothing to `dataToUpdate.imageUrl`, so Prisma will keep the existing value in the database.
+
+  // 5. Check if there's anything valid to update
   if (Object.keys(dataToUpdate).length === 0) {
     res.status(400);
-    throw new Error('No valid fields provided for update. To update an image, include `imageUrl` as base64 or null/empty string.');
+    throw new Error('No valid fields provided for update.');
   }
 
-  // Perform the database update for non-image fields
+  // 6. Perform the single database update operation
   const updatedCar = await prisma.car.update({
     where: { id: carId },
-    data: dataToUpdate, // Prisma will only update the fields explicitly in `dataToUpdate`
+    data: dataToUpdate, // This will now contain both image and other fields if provided
   });
 
   res.status(200).json(updatedCar);
-  // --- END: Other Car Details Update Logic ---
 });
-
 
 // @desc    Delete a car (Admin only)
 // @route   DELETE /api/cars/:id
@@ -274,5 +266,5 @@ module.exports = {
   getCars,
   getCarById,
   updateCar,
-  deleteCar,
+  deleteCar
 };
