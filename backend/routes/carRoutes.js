@@ -1,7 +1,7 @@
 // routes/carRoutes.js
 const express = require('express');
 const {
-  addCar,
+  createCar,
   getCars,
   getCarById,
   updateCar,
@@ -12,7 +12,7 @@ const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.route('/')
-  .post(protect, authorizeRoles('admin'), addCar)
+  .post(protect, authorizeRoles('admin'), createCar)
   .get(getCars);
 
 router.route('/:id')
