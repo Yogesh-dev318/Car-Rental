@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 app.use(cors({
-  origin: 'http://localhost:3000', // Replace with your React frontend's URL
+  origin: 'https://car-rental-dun-delta.vercel.app/', // Frontend running on Vite's default port
   credentials: true,
 }));
 
