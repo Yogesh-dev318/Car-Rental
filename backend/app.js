@@ -19,7 +19,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 app.use(cors({
-  origin: 'https://car-rental-dun-delta.vercel.app/', // Frontend running on Vite's default port
+  origin: 'https://car-rental-keqgcrc1w-yogeshs-projects-5fae840f.vercel.app/', // Frontend running on Vite's default port
   credentials: true,
 }));
 
