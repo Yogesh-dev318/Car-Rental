@@ -1,4 +1,3 @@
-// controllers/userController.js
 const asyncHandler = require('express-async-handler');
 const prisma = require('../config/db');
 const bcrypt = require('bcryptjs');
@@ -7,7 +6,6 @@ const bcrypt = require('bcryptjs');
 // @route   GET /api/users/profile
 // @access  Private
 const getUserProfile = asyncHandler(async (req, res) => {
-  // req.user is populated by the protect middleware
   const user = await prisma.user.findUnique({
     where: { id: req.user.id },
     select: { id: true, firstName: true, lastName: true, email: true, role: true, createdAt: true, updatedAt: true },
@@ -36,7 +34,6 @@ const updateprofile = asyncHandler(async (req, res) => {
     throw new Error('User not found.');
   }
 
-  // Check if new email is already taken by another user (if email is being changed)
   if (email && email !== user.email) {
     const emailExists = await prisma.user.findUnique({ where: { email } });
     if (emailExists) {
@@ -47,7 +44,6 @@ const updateprofile = asyncHandler(async (req, res) => {
 
   let hashedPassword = user.password;
   if (password) {
-    // Only hash password if a new password is provided
     const salt = await bcrypt.genSalt(10);
     hashedPassword = await bcrypt.hash(password, salt);
   }
@@ -58,7 +54,7 @@ const updateprofile = asyncHandler(async (req, res) => {
       firstName: firstName !== undefined ? firstName : user.firstName,
       lastName: lastName !== undefined ? lastName : user.lastName,
       email: email !== undefined ? email : user.email,
-      password: hashedPassword, // Use new hashed password or old one
+      password: hashedPassword, 
     },
     select: { id: true, firstName: true, lastName: true, email: true, role: true, createdAt: true, updatedAt: true },
   });
@@ -92,7 +88,6 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error('User not found.');
   }
 
-  // Prevent admin from deleting themselves or other admins accidentally
   if (user.role === 'admin' && user.id === req.user.id) {
     res.status(400);
     throw new Error('Admin cannot delete their own account directly through this endpoint.');
@@ -102,20 +97,10 @@ const deleteUser = asyncHandler(async (req, res) => {
      throw new Error('Cannot delete another admin account.');
   }
 
-
-  // Before deleting a user, consider deleting their associated bookings
-  // or reassigning them, depending on your business rules.
-  // For simplicity, here we'll just delete the user, which will fail
-  // due to foreign key constraints if bookings exist (if not set to CASCADE).
-  // If you set `onDelete: Cascade` in schema.prisma for Booking.userId,
-  // then bookings will automatically be deleted.
-  // For example: `userId     String @relation(fields: [userId], references: [id], onDelete: Cascade)`
-
-  // Check if user has active bookings (if you want to prevent deletion)
   const activeBookings = await prisma.booking.count({
     where: {
       userId: req.params.id,
-      status: { in: ['pending', 'confirmed'] } // Consider 'completed' if you want to keep history
+      status: { in: ['pending', 'confirmed'] }
     }
   });
 
@@ -133,7 +118,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 module.exports = {
   getUserProfile,
-  updateprofile, // Renamed
+  updateprofile, 
   getUsers,
   deleteUser,
 };

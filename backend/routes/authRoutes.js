@@ -1,14 +1,13 @@
-// routes/authRoutes.js
 const express = require('express');
 const { signup, Login, Logout, CheckAuth } = require('../controllers/authController');
-const { protect } = require('../middleware/authMiddleware'); // Import protect middleware
+const { protect } = require('../middleware/authMiddleware'); 
 
 const router = express.Router();
 
-router.post("/signup", signup); // Changed from /register to /signup
+router.post("/signup", signup); 
 router.post("/login", Login);
 router.post("/logout", Logout);
 
-router.get("/check", protect, CheckAuth); // New route to check authentication status
+router.get("/check", protect, CheckAuth); 
 
 module.exports = router;

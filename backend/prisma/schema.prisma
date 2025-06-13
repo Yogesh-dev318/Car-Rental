@@ -35,7 +35,7 @@ model Car {
   location        String
   pricePerDay     Float
   availability    Boolean   @default(true)
-  imageUrl        String?   // Stores the Cloudinary URL
+  imageUrl        String?   
   bookings        Booking[]
   createdAt       DateTime  @default(now())
   updatedAt DateTime  @updatedAt

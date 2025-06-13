@@ -1,8 +1,7 @@
-// routes/userRoutes.js
 const express = require('express');
 const {
   getUserProfile,
-  updateprofile, // Renamed import
+  updateprofile, 
   getUsers,
   deleteUser,
 } = require('../controllers/userController');
@@ -11,9 +10,9 @@ const { protect, authorizeRoles } = require('../middleware/authMiddleware');
 const router = express.Router();
 
 router.route('/profile')
-  .get(protect, getUserProfile); // This is still GET /api/users/profile
+  .get(protect, getUserProfile); 
 
-router.put("/update-profile", protect, updateprofile); // Changed route to /update-profile
+router.put("/update-profile", protect, updateprofile); 
 
 router.route('/')
   .get(protect, authorizeRoles('admin'), getUsers);

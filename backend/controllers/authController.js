@@ -1,4 +1,3 @@
-// controllers/authController.js
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const prisma = require('../config/db');
@@ -10,13 +9,11 @@ const generateToken = require('../utils/generateToken');
 const signup = asyncHandler(async (req, res) => {
   const { firstName, lastName, email, password, role } = req.body;
 
-  // Validate input fields
   if (!firstName || !lastName || !email || !password) {
     res.status(400);
     throw new Error('Please enter all required fields');
   }
 
-  // Check if user already exists
   const userExists = await prisma.user.findUnique({ where: { email } });
 
   if (userExists) {
@@ -24,23 +21,20 @@ const signup = asyncHandler(async (req, res) => {
     throw new Error('User with this email already exists');
   }
 
-  // Hash password
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
 
-  // Create new user
   const user = await prisma.user.create({
     data: {
       firstName,
       lastName,
       email,
       password: hashedPassword,
-      role: role || 'customer', // Default role is 'customer'
+      role: role || 'customer', 
     },
   });
 
   if (user) {
-    // Generate JWT token and set as cookie
     generateToken(res, user.id);
     res.status(201).json({
       id: user.id,
@@ -61,12 +55,10 @@ const signup = asyncHandler(async (req, res) => {
 const Login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Find user by email
   const user = await prisma.user.findUnique({ where: { email } });
 
-  // Check if user exists and password matches
   if (user && (await bcrypt.compare(password, user.password))) {
-    // Generate JWT token and set as cookie
+
     generateToken(res, user.id);
     res.json({
       id: user.id,
@@ -76,7 +68,7 @@ const Login = asyncHandler(async (req, res) => {
       role: user.role,
     });
   } else {
-    res.status(401); // Unauthorized
+    res.status(401); 
     throw new Error('Invalid email or password');
   }
 });
@@ -85,10 +77,10 @@ const Login = asyncHandler(async (req, res) => {
 // @route   POST /api/auth/logout
 // @access  Public
 const Logout = asyncHandler(async (req, res) => {
-  // Clear the token cookie
+
   res.cookie('token', '', {
     httpOnly: true,
-    expires: new Date(0), // Set expiry to past date
+    expires: new Date(0), 
     path: '/',
   });
   res.status(200).json({ message: 'Logged out successfully' });
@@ -98,8 +90,7 @@ const Logout = asyncHandler(async (req, res) => {
 // @route   GET /api/auth/check
 // @access  Private
 const CheckAuth = asyncHandler(async (req, res) => {
-  // If protect middleware passes, it means the user is authenticated
-  // req.user will be populated by the protect middleware
+
   res.status(200).json({
     isAuthenticated: true,
     user: {

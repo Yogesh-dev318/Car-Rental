@@ -1,14 +1,13 @@
-// controllers/bookingController.js
 const asyncHandler = require('express-async-handler');
 const prisma = require('../config/db');
-const moment = require('moment'); // For date calculations
+const moment = require('moment'); 
 
 // @desc    Create a new booking
 // @route   POST /api/bookings
 // @access  Private/Customer
 const createBooking = asyncHandler(async (req, res) => {
   const { carId, startDate, endDate } = req.body;
-  const userId = req.user.id; // User ID from authenticated request
+  const userId = req.user.id; 
 
   if (!carId || !startDate || !endDate) {
     res.status(400);
@@ -52,11 +51,10 @@ const createBooking = asyncHandler(async (req, res) => {
 
   const totalPrice = durationInDays * car.pricePerDay;
 
-  // Check for overlapping bookings for the same car
   const existingOverlappingBookings = await prisma.booking.findMany({
     where: {
       carId,
-      status: { not: 'cancelled' }, // Consider only active/pending/completed bookings
+      status: { not: 'cancelled' }, 
       OR: [
         // New booking starts during an existing one
         {
@@ -76,14 +74,13 @@ const createBooking = asyncHandler(async (req, res) => {
     data: {
       userId,
       carId,
-      startDate: start.toDate(), // Convert moment object to Date
-      endDate: end.toDate(),     // Convert moment object to Date
+      startDate: start.toDate(), 
+      endDate: end.toDate(),    
       totalPrice,
-      status: 'pending', // Default status
+      status: 'pending', 
     },
   });
 
-  // Optionally, if you want to mark the car as unavailable immediately upon booking creation:
   // await prisma.car.update({
   //   where: { id: carId },
   //   data: { availability: false },
@@ -106,7 +103,7 @@ const getAllBookings = asyncHandler(async (req, res) => {
       },
     },
     orderBy: {
-      createdAt: 'desc', // Newest bookings first
+      createdAt: 'desc', 
     },
   });
   res.status(200).json(bookings);
@@ -124,7 +121,7 @@ const getMyBookings = asyncHandler(async (req, res) => {
       },
     },
     orderBy: {
-      createdAt: 'desc', // Newest bookings first
+      createdAt: 'desc', 
     },
   });
   res.status(200).json(bookings);
@@ -151,7 +148,6 @@ const getBookingById = asyncHandler(async (req, res) => {
     throw new Error('Booking not found.');
   }
 
-  // Authorize: Admin can view any booking, customer can only view their own.
   if (req.user.role !== 'admin' && booking.userId !== req.user.id) {
     res.status(403); // Forbidden
     throw new Error('Not authorized to view this booking.');
@@ -187,23 +183,20 @@ const updateBookingStatus = asyncHandler(async (req, res) => {
     data: { status },
   });
 
-  // Logic to update car availability based on booking status changes
   if (status === 'cancelled' && oldStatus !== 'cancelled') {
-    // If booking is cancelled, make the car available again
+
     await prisma.car.update({
       where: { id: booking.carId },
       data: { availability: true },
     });
   } else if (status === 'confirmed' && oldStatus !== 'confirmed') {
-    // If booking is confirmed, make the car unavailable (if it wasn't already)
-    // This assumes a car can only have one confirmed booking at a time
+
     await prisma.car.update({
       where: { id: booking.carId },
       data: { availability: false },
     });
   }
-  // For 'completed' status, car availability might or might not change based on your business logic.
-  // Assuming 'completed' means the car is now free.
+
   else if (status === 'completed' && oldStatus !== 'completed') {
     await prisma.car.update({
       where: { id: booking.carId },
@@ -235,16 +228,12 @@ const generateInvoice = asyncHandler(async (req, res) => {
     throw new Error('Booking not found.');
   }
 
-  // Authorize: Admin can view any invoice, customer can only view their own.
   if (req.user.role !== 'admin' && booking.userId !== req.user.id) {
     res.status(403); // Forbidden
     throw new Error('Not authorized to generate invoice for this booking.');
   }
 
-  // In a real application, you would use a library like 'pdfkit' or 'html-pdf'
-  // to generate a proper PDF invoice. For now, we'll return a JSON representation.
-  // You can also consider a template engine (e.g., EJS) to render an HTML invoice
-  // and then convert that HTML to PDF.
+ 
   res.status(200).json({
     message: 'Invoice data retrieved successfully (PDF generation is a separate step).',
     invoiceDetails: {
