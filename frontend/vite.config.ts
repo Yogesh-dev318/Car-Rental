@@ -13,7 +13,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://car-rental-uevb.onrender.com',
+        target: 'http://localhost:3000',
         changeOrigin: true,
       },
     },
