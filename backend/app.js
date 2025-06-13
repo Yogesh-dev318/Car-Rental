@@ -4,19 +4,14 @@ const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 const path = require('path');
-
-// Load environment variables from .env file
-dotenv.config({ path: path.resolve(__dirname, './.env') });
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-// Import routes
 const authRoutes = require('./routes/authRoutes');
 const carRoutes = require('./routes/carRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const userRoutes = require('./routes/userRoutes');
+dotenv.config();
 
+const app = express();
+const PORT = process.env.PORT || 3000;
 // Middleware
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
