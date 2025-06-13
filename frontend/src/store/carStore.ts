@@ -21,9 +21,9 @@ interface CarState {
   isLoading: boolean;
   fetchCars: () => Promise<void>;
   fetchCarById: (id: string) => Promise<void>;
-  createCar: (carData: any) => Promise<void>;
-  updateCar: (id: string, carData: any) => Promise<void>;
-  deleteCar: (id: string) => Promise<void>;
+  createCar: (carData: any) => Promise<boolean>;
+  updateCar: (id: string, carData: any) => Promise<boolean>;
+  deleteCar: (id: string) => Promise<boolean>;
 }
 
 export const useCarStore = create<CarState>((set, get) => ({
@@ -58,11 +58,13 @@ export const useCarStore = create<CarState>((set, get) => ({
       await axiosInstance.post('/cars', carData);
       toast.success('Car created successfully!');
       await get().fetchCars(); // Refresh the list
+      set({ isLoading: false });
+      return true; // Return true on success
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to create car';
       set({ isLoading: false });
       toast.error(errorMessage);
-      throw new Error(errorMessage);
+      return false; // Return false on failure
     }
   },
   updateCar: async (id, carData) => {
@@ -71,11 +73,13 @@ export const useCarStore = create<CarState>((set, get) => ({
       await axiosInstance.put(`/cars/${id}`, carData);
       toast.success('Car updated successfully!');
       await get().fetchCars();
+      set({ isLoading: false });
+      return true; // Return true on success
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to update car';
       set({ isLoading: false });
       toast.error(errorMessage);
-      throw new Error(errorMessage);
+      return false; // Return false on failure
     }
   },
   deleteCar: async (id) => {
@@ -84,11 +88,13 @@ export const useCarStore = create<CarState>((set, get) => ({
       await axiosInstance.delete(`/cars/${id}`);
       toast.success('Car deleted successfully!');
       await get().fetchCars();
+      set({ isLoading: false });
+      return true; // Return true on success
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to delete car';
       set({ isLoading: false });
       toast.error(errorMessage);
-       throw new Error(errorMessage);
+      return false; // Return false on failure
     }
   },
 }));

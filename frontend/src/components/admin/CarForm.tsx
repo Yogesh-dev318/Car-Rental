@@ -9,7 +9,7 @@ import { Switch } from '../ui/switch';
 import { Loader2 } from 'lucide-react';
 
 interface CarFormProps {
-    car: any; // Can be more specific if you have a Car type
+    car: any; 
     onFinished: () => void;
 }
 
@@ -48,17 +48,15 @@ const CarForm = ({ car, onFinished }: CarFormProps) => {
             payload.imageUrl = base64Image;
         }
 
-        try {
-            if (car) {
-                await updateCar(car.id, payload);
-            } else {
-                await createCar(payload);
-            }
+        // Use the boolean returned from the store to decide whether to close the form
+        const success = car 
+            ? await updateCar(car.id, payload)
+            : await createCar(payload);
+
+        if (success) {
             onFinished();
-        } catch (error) {
-            // Error is already toasted in the store
-            console.error(error);
         }
+        // If not successful, the dialog stays open and the error toast is already shown.
     };
 
     return (
@@ -67,20 +65,43 @@ const CarForm = ({ car, onFinished }: CarFormProps) => {
                 <div>
                     <Label htmlFor="make">Make</Label>
                     <Input id="make" {...register('make', { required: 'Make is required' })} />
-                    {errors.make && <p className="text-red-500 text-sm mt-1">{errors.make.message as string}</p>}
+                    {errors.make && <p className="text-destructive text-sm mt-1">{errors.make.message as string}</p>}
                 </div>
                 <div>
                     <Label htmlFor="model">Model</Label>
                     <Input id="model" {...register('model', { required: 'Model is required' })} />
-                    {errors.model && <p className="text-red-500 text-sm mt-1">{errors.model.message as string}</p>}
+                    {errors.model && <p className="text-destructive text-sm mt-1">{errors.model.message as string}</p>}
                 </div>
             </div>
-            {/* ... other fields */}
+             <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <Label htmlFor="year">Year</Label>
+                    <Input id="year" type="number" {...register('year', { required: 'Year is required', valueAsNumber: true })} />
+                    {errors.year && <p className="text-destructive text-sm mt-1">{errors.year.message as string}</p>}
+                </div>
+                 <div>
+                    <Label htmlFor="type">Type (e.g., Sedan, SUV)</Label>
+                    <Input id="type" {...register('type', { required: 'Type is required' })} />
+                    {errors.type && <p className="text-destructive text-sm mt-1">{errors.type.message as string}</p>}
+                </div>
+            </div>
+             <div className="grid grid-cols-2 gap-4">
+                <div>
+                    <Label htmlFor="pricePerDay">Price Per Day</Label>
+                    <Input id="pricePerDay" type="number" step="0.01" {...register('pricePerDay', { required: 'Price is required', valueAsNumber: true })} />
+                     {errors.pricePerDay && <p className="text-destructive text-sm mt-1">{errors.pricePerDay.message as string}</p>}
+                </div>
+                <div>
+                    <Label htmlFor="location">Location</Label>
+                    <Input id="location" {...register('location', { required: 'Location is required' })} />
+                    {errors.location && <p className="text-destructive text-sm mt-1">{errors.location.message as string}</p>}
+                </div>
+            </div>
             <div>
                 <Label htmlFor="image">Image</Label>
                 <Input id="image" type="file" accept="image/*" onChange={handleImageUpload} />
                 {(base64Image || car?.imageUrl) && (
-                     <img src={base64Image || car.imageUrl} alt="Car preview" className="mt-2 h-24 w-auto rounded"/>
+                     <img src={base64Image || car.imageUrl} alt="Car preview" className="mt-2 h-24 w-auto rounded border"/>
                 )}
             </div>
             <div className="flex items-center space-x-2">

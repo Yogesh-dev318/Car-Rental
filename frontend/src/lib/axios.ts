@@ -2,8 +2,8 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: '/api', // The proxy will handle this
-  withCredentials: true, // Important for sending cookies with requests
+  baseURL: "/api", 
+  withCredentials: true,
 });
 
 export default axiosInstance;

@@ -67,6 +67,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         await axiosInstance.delete(`/users/${id}`);
         toast.success('User deleted successfully!');
         await get().fetchAllUsers();
+        set({ isLoading: false });
         return true;
      } catch (error: any) {
         const errorMessage = error.response?.data?.message || 'Failed to delete user';
