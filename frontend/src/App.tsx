@@ -19,6 +19,7 @@ const CarManagementPage = lazy(() => import('./pages/admin/CarManagementPage'));
 const BookingManagementPage = lazy(() => import('./pages/admin/BookingManagementPage'));
 const UserManagementPage = lazy(() => import('./pages/admin/UserManagementPage'));
 const NotFoundPage = lazy(() => import('./pages/NotFoundPage'));
+const InvoicePage = lazy(() => import('./pages/InvoicePage'));
 
 const App = () => {
   const { checkAuth, isAuthenticated } = useAuthStore();
@@ -43,6 +44,7 @@ const App = () => {
                 <Route element={<ProtectedRoute />}>
                     <Route path="/bookings/my" element={<MyBookingsPage />} />
                     <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/invoice/:bookingId" element={<InvoicePage />} />
                 </Route>
 
                 {/* Admin Routes */}

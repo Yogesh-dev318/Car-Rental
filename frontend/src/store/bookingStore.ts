@@ -22,20 +22,52 @@ interface Booking {
   }
 }
 
+interface InvoiceDetails {
+  bookingId: string;
+  customerName: string;
+  customerEmail: string;
+  carDetails: string;
+  carImageUrl?: string;
+  startDate: string;
+  endDate: string;
+  durationDays: number;
+  pricePerDay: number;
+  totalPrice: number;
+  status: string;
+  bookingDate: string;
+  invoiceGeneratedDate: string;
+}
+
 interface BookingState {
   bookings: Booking[];
   myBookings: Booking[];
+  invoiceDetails: InvoiceDetails | null;
   isLoading: boolean;
   createBooking: (bookingData: any) => Promise<boolean>;
-  fetchAllBookings: () => Promise<void>; // For admin
-  fetchMyBookings: () => Promise<void>; // For customer
+  fetchAllBookings: () => Promise<void>;
+  fetchMyBookings: () => Promise<void>;
   updateBookingStatus: (id: string, status: string) => Promise<void>;
+  fetchInvoice: (bookingId: string) => Promise<void>;
 }
 
 export const useBookingStore = create<BookingState>((set, get) => ({
   bookings: [],
   myBookings: [],
+  invoiceDetails: null,
   isLoading: false,
+
+  fetchInvoice: async (bookingId: string) => {
+    set({ isLoading: true, invoiceDetails: null });
+    try {
+      const response = await axiosInstance.get(`/bookings/${bookingId}/invoice`);
+      set({ invoiceDetails: response.data.invoiceDetails, isLoading: false });
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || 'Failed to fetch invoice.';
+      set({ isLoading: false });
+      toast.error(errorMessage);
+    }
+  },
+
   createBooking: async (bookingData) => {
     set({ isLoading: true });
     try {

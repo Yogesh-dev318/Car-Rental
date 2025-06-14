@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { useBookingStore } from '../store/bookingStore';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Loader2 } from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Loader2, FileText } from 'lucide-react';
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 
 const MyBookingsPage = () => {
     const { myBookings, fetchMyBookings, isLoading } = useBookingStore();
@@ -60,6 +62,16 @@ const MyBookingsPage = () => {
                                     Total Price: ${booking.totalPrice.toFixed(2)}
                                 </div>
                             </CardContent>
+                            <CardFooter>
+                                {['confirmed', 'completed'].includes(booking.status) && (
+                                    <Button asChild variant="outline">
+                                        <Link to={`/invoice/${booking.id}`}>
+                                            <FileText className="mr-2 h-4 w-4" />
+                                            View Invoice
+                                        </Link>
+                                    </Button>
+                                )}
+                            </CardFooter>
                         </Card>
                     ))}
                 </div>

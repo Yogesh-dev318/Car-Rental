@@ -1,13 +1,14 @@
 import { useEffect } from 'react';
 import { useBookingStore } from '../../store/bookingStore';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
-import { Loader2 } from 'lucide-react';
+import { Loader2, FileText } from 'lucide-react';
 import { format } from 'date-fns';
 import { Badge } from '../../components/ui/badge';
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from '../../components/ui/dropdown-menu';
 import { Button } from '../../components/ui/button';
+import { Link } from 'react-router-dom';
 
 const BookingManagementPage = () => {
     const { bookings, fetchAllBookings, updateBookingStatus, isLoading } = useBookingStore();
@@ -61,7 +62,12 @@ const BookingManagementPage = () => {
                                 <TableCell>{format(new Date(booking.startDate), 'P')} - {format(new Date(booking.endDate), 'P')}</TableCell>
                                 <TableCell>${booking.totalPrice.toFixed(2)}</TableCell>
                                 <TableCell><Badge variant={getStatusVariant(booking.status)} className="capitalize">{booking.status}</Badge></TableCell>
-                                <TableCell className="text-right">
+                                <TableCell className="text-right space-x-2">
+                                     <Button asChild variant="outline" size="icon">
+                                        <Link to={`/invoice/${booking.id}`} title="View Invoice">
+                                            <FileText className="h-4 w-4" />
+                                        </Link>
+                                     </Button>
                                      <DropdownMenu>
                                         <DropdownMenuTrigger asChild>
                                             <Button variant="outline" disabled={isLoading}>Update Status</Button>
