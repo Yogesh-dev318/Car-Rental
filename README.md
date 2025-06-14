@@ -19,8 +19,8 @@ A full-featured **Car Rental Web Application** developed using the **MERN stack*
 ## 🧰 Tech Stack
 
 | Category        | Tech Used                          |
-|-----------------|-------------------------------------|
-| **Frontend**    | React, TailwindCSS, React Router, Axios |
+|-----------------|------------------------------------|
+| **Frontend**    | React, TailwindCSS,zustand         |
 | **Backend**     | Node.js, Express.js                |
 | **Database**    | PostgreSQL with Prisma ORM         |
 | **Auth**        | JWT (JSON Web Token)               |
@@ -54,29 +54,45 @@ NODE_ENV=development
 backend setup
 
 Navigate to backend folder:-
-```cd backend```
+``` js
+cd backend
+```
 
 Install dependencies:-
-```npm install```
+```js
+npm install
+```
 
 Run Prisma migrations:-
-```npx prisma migrate dev --name init```
+```js
+npx prisma migrate dev --name init
+```
 
 Generate Prisma client:-
-```npx prisma generate```
+```js
+npx prisma generate
+```
 
 Start development server:-
-```npm run dev```
+```js
+npm run dev
+```
 
 frontend setup
 
 Navigate to frontend folder:-
-```cd frontend```
+```js
+cd frontend
+```
 
 Install dependencies:-
-```npm install```
+```js
+npm install
+```
 
 Start the frontend application:-
-```npm run dev```
+```js
+npm run dev
+```
 
-Made with ❤️ by Yogesh Poonia
+Made by Yogesh Choudhary
