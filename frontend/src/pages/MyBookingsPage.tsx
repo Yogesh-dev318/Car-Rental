@@ -1,4 +1,3 @@
-// src/pages/MyBookingsPage.tsx
 import { useEffect } from 'react';
 import { useBookingStore } from '../store/bookingStore';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';

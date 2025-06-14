@@ -1,4 +1,3 @@
-// src/pages/admin/CarManagementPage.tsx
 import { useEffect, useState } from 'react';
 import { useCarStore } from '../../store/carStore';
 import { Button } from '../../components/ui/button';

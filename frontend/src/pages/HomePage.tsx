@@ -1,4 +1,3 @@
-// src/pages/HomePage.tsx
 import { useEffect } from 'react';
 import { useCarStore } from '../store/carStore';
 import CarCard from '../components/CarCard';

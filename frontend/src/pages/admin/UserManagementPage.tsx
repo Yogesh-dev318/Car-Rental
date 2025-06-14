@@ -1,4 +1,3 @@
-// src/pages/admin/UserManagementPage.tsx
 import { useEffect, useState } from 'react';
 import { useUserStore } from '../../store/userStore';
 import { useAuthStore } from '../../store/authStore';

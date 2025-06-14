@@ -1,4 +1,3 @@
-// src/pages/admin/AdminDashboardPage.tsx
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Car, BookCopy, Users } from 'lucide-react';

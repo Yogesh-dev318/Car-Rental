@@ -1,4 +1,3 @@
-// src/pages/LoginPage.tsx
 import { useForm } from 'react-hook-form';
 import { useAuthStore } from '../store/authStore';
 import { Link } from 'react-router-dom';

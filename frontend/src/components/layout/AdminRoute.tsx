@@ -1,4 +1,3 @@
-// src/components/layout/AdminRoute.tsx
 import { Navigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Loader2 } from 'lucide-react';

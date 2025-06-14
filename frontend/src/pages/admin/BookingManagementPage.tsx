@@ -1,4 +1,3 @@
-// src/pages/admin/BookingManagementPage.tsx
 import { useEffect } from 'react';
 import { useBookingStore } from '../../store/bookingStore';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';

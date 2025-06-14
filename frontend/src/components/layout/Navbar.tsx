@@ -1,4 +1,3 @@
-// src/components/layout/Navbar.tsx
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Button } from '../ui/button';

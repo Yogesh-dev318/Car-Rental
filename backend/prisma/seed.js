@@ -4,9 +4,6 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log('Seeding database...');
-
-  // --- Clear existing data (optional, but good for fresh seeds) ---
-  // Be cautious with this in production!
   try {
     console.log('Deleting existing bookings...');
     await prisma.booking.deleteMany();
@@ -17,11 +14,10 @@ async function main() {
     console.log('Existing data cleared.');
   } catch (error) {
     console.error('Error clearing data:', error);
-    // Continue even if clear fails (e.g., table doesn't exist yet, or FK constraint)
+
   }
 
 
-  // --- Users ---
   const hashedPasswordAdmin = await bcrypt.hash('123456789', 10);
   const hashedPasswordCustomer = await bcrypt.hash('123456789', 10);
 
@@ -59,7 +55,6 @@ async function main() {
   console.log(`Created customer: ${customer2.email}`);
 
 
-  // --- Cars ---
   const car1 = await prisma.car.create({
     data: {
       make: 'Toyota',
@@ -69,7 +64,7 @@ async function main() {
       location: 'New Delhi',
       pricePerDay: 75.00,
       availability: true,
-      imageUrl: 'https://res.cloudinary.com/your_cloud_name/image/upload/v1/car-rental-portal/toyota_camry.jpg', // Replace with a real URL or placeholder
+      imageUrl: 'https://res.cloudinary.com/dkegbcjgg/image/upload/v1749820070/xmsr0sssrrernokkwuxu.jpg', 
     },
   });
   console.log(`Created car: ${car1.make} ${car1.model}`);
@@ -83,7 +78,7 @@ async function main() {
       location: 'Mumbai',
       pricePerDay: 120.00,
       availability: true,
-      imageUrl: 'https://res.cloudinary.com/your_cloud_name/image/upload/v1/car-rental-portal/honda_crv.jpg', // Replace with a real URL or placeholder
+      imageUrl: 'https://res.cloudinary.com/dkegbcjgg/image/upload/v1749820043/txnef9j2m5dcg5nthnnw.jpg', 
     },
   });
   console.log(`Created car: ${car2.make} ${car2.model}`);
@@ -97,7 +92,7 @@ async function main() {
       location: 'Bengaluru',
       pricePerDay: 200.00,
       availability: true,
-      imageUrl: 'https://res.cloudinary.com/your_cloud_name/image/upload/v1/car-rental-portal/mercedes_cclass.jpg', // Replace with a real URL or placeholder
+      imageUrl: 'https://res.cloudinary.com/dkegbcjgg/image/upload/v1749820032/wauas1hfdmqgz3q1jylj.webp', 
     },
   });
   console.log(`Created car: ${car3.make} ${car3.model}`);
@@ -111,21 +106,19 @@ async function main() {
       location: 'New Delhi',
       pricePerDay: 90.00,
       availability: true,
-      imageUrl: 'https://res.cloudinary.com/your_cloud_name/image/upload/v1/car-rental-portal/hyundai_creta.jpg', // Replace with a real URL or placeholder
+      imageUrl: 'https://res.cloudinary.com/dkegbcjgg/image/upload/v1749820084/gguz4z3ste0xpgqygiaq.jpg', 
     },
   });
   console.log(`Created car: ${car4.make} ${car4.model}`);
 
 
-  // --- Bookings ---
-  // Booking for car1 by customer1
   const booking1 = await prisma.booking.create({
     data: {
       userId: customer1.id,
       carId: car1.id,
       startDate: new Date('2025-07-01T10:00:00Z'),
       endDate: new Date('2025-07-05T10:00:00Z'),
-      totalPrice: 4 * car1.pricePerDay, // 4 days * 75 = 300
+      totalPrice: 4 * car1.pricePerDay, 
       status: 'confirmed',
     },
   });
@@ -138,20 +131,19 @@ async function main() {
       carId: car2.id,
       startDate: new Date('2025-07-10T10:00:00Z'),
       endDate: new Date('2025-07-12T10:00:00Z'),
-      totalPrice: 2 * car2.pricePerDay, // 2 days * 120 = 240
+      totalPrice: 2 * car2.pricePerDay, 
       status: 'pending',
     },
   });
   console.log(`Created booking: ${booking2.id} for ${customer2.email}`);
 
-  // Another booking for car4 by customer1 (completed, past date)
   const booking3 = await prisma.booking.create({
     data: {
       userId: customer1.id,
       carId: car4.id,
       startDate: new Date('2025-05-15T10:00:00Z'),
       endDate: new Date('2025-05-18T10:00:00Z'),
-      totalPrice: 3 * car4.pricePerDay, // 3 days * 90 = 270
+      totalPrice: 3 * car4.pricePerDay, 
       status: 'completed',
     },
   });

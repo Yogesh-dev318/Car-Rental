@@ -1,4 +1,3 @@
-// src/pages/ProfilePage.tsx
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useUserStore } from '../store/userStore';

@@ -54,29 +54,29 @@ NODE_ENV=development
 backend setup
 
 Navigate to backend folder:-
-cd backend
+```cd backend```
 
 Install dependencies:-
-npm install
+```npm install```
 
 Run Prisma migrations:-
-npx prisma migrate dev --name init
+```npx prisma migrate dev --name init```
 
 Generate Prisma client:-
-npx prisma generate
+```npx prisma generate```
 
 Start development server:-
-npm run dev
+```npm run dev```
 
 frontend setup
 
 Navigate to frontend folder:-
-cd frontend
+```cd frontend```
 
 Install dependencies:-
-npm install
+```npm install```
 
 Start the frontend application:-
-npm run dev
+```npm run dev```
 
 Made with ❤️ by Yogesh Poonia
