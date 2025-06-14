@@ -1,4 +1,4 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
 import { Button } from '../ui/button';
 import { Car, LogOut, User, LayoutDashboard } from 'lucide-react';
@@ -6,6 +6,7 @@ import { Car, LogOut, User, LayoutDashboard } from 'lucide-react';
 const Navbar = () => {
   const { isAuthenticated, user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogout = async () => {
     await logout();
@@ -16,6 +17,11 @@ const Navbar = () => {
     `flex items-center space-x-1 transition-colors ${
       isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'
     }`;
+  
+  // Hide navbar on the landing page
+  if (location.pathname === '/') {
+    return null;
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-sm border-b">
@@ -25,11 +31,15 @@ const Navbar = () => {
           <span>Rent-A-Car</span>
         </Link>
         <div className="flex items-center space-x-4">
+          <NavLink to="/cars" className={navLinkClass}>
+             Cars
+          </NavLink>
+
           {isAuthenticated ? (
             <>
-              <span className="text-sm text-muted-foreground hidden sm:inline">
+              {/* <span className="text-sm text-muted-foreground hidden sm:inline">
                 Welcome, {user?.firstName}
-              </span>
+              </span> */}
               {user?.role === 'admin' && (
                 <NavLink to="/admin/dashboard" className={navLinkClass}>
                    <LayoutDashboard size={18} />

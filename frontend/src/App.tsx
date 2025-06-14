@@ -7,7 +7,8 @@ import ProtectedRoute from './components/layout/ProtectedRoute';
 import AdminRoute from './components/layout/AdminRoute';
 import { Loader2 } from 'lucide-react';
 
-// Lazy load pages for better performance
+// Lazy load pages
+const LandingPage = lazy(() => import('./pages/LandingPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
@@ -35,9 +36,10 @@ const App = () => {
         <Suspense fallback={<div className="flex justify-center items-center h-[calc(100vh-80px)]"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>}>
             <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<HomePage />} />
-                <Route path="/login" element={isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
-                <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignupPage />} />
+                <Route path="/" element={<LandingPage />} />
+                <Route path="/cars" element={<HomePage />} />
+                <Route path="/login" element={isAuthenticated ? <Navigate to="/cars" /> : <LoginPage />} />
+                <Route path="/signup" element={isAuthenticated ? <Navigate to="/cars" /> : <SignupPage />} />
                 <Route path="/cars/:id" element={<CarDetailsPage />} />
 
                 {/* Protected Routes (Customer & Admin) */}
