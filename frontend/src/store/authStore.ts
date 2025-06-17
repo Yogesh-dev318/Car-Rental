@@ -15,7 +15,7 @@ interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   login: (credentials: any) => Promise<void>;
-  signup: (userData: any) => Promise<void>;
+  signup: (userData: any) => Promise<boolean>; // Changed return type
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
 }
@@ -23,7 +23,7 @@ interface AuthState {
 export const useAuthStore = create<AuthState>((set) => ({
   user: null,
   isAuthenticated: false,
-  isLoading: true, // Start as true to check auth status on load
+  isLoading: true,
   login: async (credentials) => {
     set({ isLoading: true });
     try {
@@ -41,11 +41,12 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const response = await axiosInstance.post('/auth/signup', userData);
       set({ user: response.data, isAuthenticated: true, isLoading: false });
-      toast.success('Signed up successfully!');
+      return true; // Return true on success
     } catch (error: any) {
       const errorMessage = error.response?.data?.message || 'Failed to sign up';
       set({ isLoading: false });
       toast.error(errorMessage);
+      return false; // Return false on failure
     }
   },
   logout: async () => {

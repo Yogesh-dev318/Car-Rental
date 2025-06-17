@@ -7,7 +7,7 @@ import { Github, Linkedin } from 'lucide-react';
 const LandingPage = () => {
   return (
     // Main container to center content and fill the screen
-    <div className="relative h-screen w-full -m-4 -mt-20 flex flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
+    <div className="relative h-screen w-full m-4 -mt-20 flex flex-col items-center justify-center overflow-hidden rounded-lg bg-background">
       
       {/* The Dot Pattern Background */}
       <DotPattern

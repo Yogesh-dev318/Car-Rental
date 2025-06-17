@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react';
 import { useUserStore } from '../../store/userStore';
 import { useAuthStore } from '../../store/authStore';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../../components/ui/table';
-import { Loader2, Trash2 } from 'lucide-react';
+import { Loader2, Trash2, PlusCircle } from 'lucide-react';
 import { Button } from '../../components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '../../components/ui/dialog';
 import { Badge } from '../../components/ui/badge';
+import { Link } from 'react-router-dom';
 
 const UserManagementPage = () => {
     const { users, fetchAllUsers, deleteUser, isLoading } = useUserStore();
@@ -23,9 +24,9 @@ const UserManagementPage = () => {
     };
     
     const confirmDelete = async () => {
-        if(userToDelete) {
+        if (userToDelete) {
             const success = await deleteUser(userToDelete.id);
-            if(success) {
+            if (success) {
                 setIsConfirmOpen(false);
                 setUserToDelete(null);
             }
@@ -42,7 +43,15 @@ const UserManagementPage = () => {
     
     return (
         <div>
-            <h1 className="text-3xl font-bold mb-6">User Management</h1>
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">User Management</h1>
+                <Button asChild>
+                    <Link to="/admin/signup">
+                        <PlusCircle className="mr-2 h-4 w-4" />
+                        Create New Admin
+                    </Link>
+                </Button>
+            </div>
              
             <Dialog open={isConfirmOpen} onOpenChange={setIsConfirmOpen}>
                 <DialogContent>

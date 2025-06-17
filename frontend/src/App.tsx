@@ -12,6 +12,7 @@ const LandingPage = lazy(() => import('./pages/LandingPage'));
 const HomePage = lazy(() => import('./pages/HomePage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
 const SignupPage = lazy(() => import('./pages/SignupPage'));
+const AdminSignupPage = lazy(() => import('./pages/admin/AdminSignupPage'));
 const CarDetailsPage = lazy(() => import('./pages/CarDetailsPage'));
 const MyBookingsPage = lazy(() => import('./pages/MyBookingsPage'));
 const ProfilePage = lazy(() => import('./pages/ProfilePage'));
@@ -51,6 +52,7 @@ const App = () => {
 
                 {/* Admin Routes */}
                 <Route element={<AdminRoute />}>
+                    <Route path="/admin/signup" element={<AdminSignupPage />} /> {/* Moved Here */}
                     <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
                     <Route path="/admin/cars" element={<CarManagementPage />} />
                     <Route path="/admin/bookings" element={<BookingManagementPage />} />

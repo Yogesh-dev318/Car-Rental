@@ -1,6 +1,6 @@
 # 🚗 Car Rental System – MERN Stack Application
 
-A full-featured **Car Rental Web Application** developed using the **MERN stack** (MongoDB, Express.js, React, Node.js) with **PostgreSQL** (via **Prisma ORM**) replacing MongoDB for relational data handling. This application allows users to browse, book, and manage car rentals easily with a modern frontend and robust backend infrastructure.
+A full-featured **Car Rental Web Application** developed using the **MERN stack** (MongoDB, Express.js, React, Node.js) with **PostgreSQL** (via **Prisma ORM**) replacing MongoDB for relational data handling. This application allows users to browse, Book, and manage car rentals easily with a modern frontend and robust backend infrastructure.
 
 ---
 
