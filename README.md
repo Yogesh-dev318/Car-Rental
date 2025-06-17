@@ -31,6 +31,10 @@ A full-featured **Car Rental Web Application** developed using the **MERN stack*
 
 ## 🛠️ Local Setup Instructions
 
+###Admin Login:-
+Email:- admin@example.com
+password:-123456789
+
 ### 🔐 Environment Variables
 
 Create a `.env` file in the `backend/` directory and add the following:
